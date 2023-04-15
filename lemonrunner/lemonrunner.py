@@ -1,14 +1,23 @@
-from dataclasses import dataclass
 from itertools import repeat
 from collections import defaultdict
 from multiprocessing import Process, Queue
 from threading import Thread, Lock
 from inspect import isgeneratorfunction
 from time import time, sleep
-from copy import copy
+
 
 class Runnable:
-    def __init__(self, id, *, target, args=tuple(), kwargs=dict(), timeout=None, times=None, interval=None):
+    def __init__(
+        self,
+        id,
+        *,
+        target,
+        args=tuple(),
+        kwargs=dict(),
+        timeout=None,
+        times=None,
+        interval=None
+    ):
         self.id = id
         self.target = target
         self.args = args
@@ -23,10 +32,10 @@ class Runnable:
     def _loop_iteration(self, output_queue: Queue):
         if isgeneratorfunction(self.target):
             for result in self.target(*self.args, **self.kwargs):
-                self.report(output_queue, 'yield', result)
+                self.report(output_queue, "yield", result)
         else:
             result = self.target(*self.args, **self.kwargs)
-            self.report(output_queue, 'return', result)
+            self.report(output_queue, "return", result)
 
     def run(self, output_queue: Queue):
         if self.times:
@@ -35,18 +44,19 @@ class Runnable:
             runs = repeat(None)
 
         for _ in runs:
-            self.report(output_queue, 'start', None)
+            self.report(output_queue, "start", None)
 
             try:
                 self._loop_iteration(output_queue)
             except Exception as e:
-                self.report(output_queue, 'exception', e)
+                self.report(output_queue, "exception", e)
 
-            self.report(output_queue, 'finish', None)
+            self.report(output_queue, "finish", None)
             if self.interval:
                 sleep(self.interval)
 
-        self.report(output_queue, 'exited', None)
+        self.report(output_queue, "exited", None)
+
 
 class Lemonrunner:
     def __init__(self):
@@ -66,7 +76,7 @@ class Lemonrunner:
             self.runnables[id] = runnable
         self._start(runnable.id)
 
-    def monitor(self, topics=('return', 'yield', 'exception')):
+    def monitor(self, topics=("return", "yield", "exception")):
         while True:
             id, topic, timestamp, result = self.output_queue.get()
             if topic in topics:
@@ -82,24 +92,28 @@ class Lemonrunner:
 
     def _check(self):
         while True:
-            # Use 40% of lowest timeout as sleep duration, or clamp to at most 1 sec
+            # Use 40% of lowest timeout as sleep duration, or clamp to at most
+            # 1 sec
             minimal_timeout = 1
             with self.runnables_lock:
                 runnables = self.runnables
 
             for id, runnable in runnables.items():
                 if runnable.timeout is not None:
-                    minimal_timeout = min(minimal_timeout, runnable.timeout or 0)
+                    minimal_timeout = min(minimal_timeout,
+                                          runnable.timeout or 0)
                     last_seen = self.last_seens[id]
                     if time() - last_seen > runnable.timeout:
                         self._stop(id)
                         self._start(id)
-            sleep(0.4*minimal_timeout)
+            sleep(0.4 * minimal_timeout)
 
     def _start(self, id):
         with self.runnables_lock:
             runnable = self.runnables[id]
-        self.procs[id] = Process(target=runnable.run, args=(self.input_queue,),  daemon=True)
+        self.procs[id] = Process(
+            target=runnable.run, args=(self.input_queue,), daemon=True
+        )
         self.procs[id].start()
 
     def _stop(self, id):
@@ -107,5 +121,6 @@ class Lemonrunner:
         proc.terminate()
         proc.close()
 
-if __name__=='__main__':
+
+if __name__ == "__main__":
     pass

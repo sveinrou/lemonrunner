@@ -1,1 +1,2 @@
-from lemonrunner.lemonrunner import Lemonrunner
+from .lemonrunner import Lemonrunner
+__all__ = ['Lemonrunner',]

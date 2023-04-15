@@ -7,7 +7,7 @@ with open("README.md", "r") as fh:
 
 requirements = []
 
-if __name__=='__main__':
+if __name__ == '__main__':
     setuptools.setup(
         name="lemonrunner",
         version=version,

@@ -1,8 +1,8 @@
 import unittest
 from unittest.mock import MagicMock, call
-from multiprocessing import Queue
 
-from lemonrunner.lemonrunner import Lemonrunner, Runnable
+from lemonrunner.lemonrunner import Runnable
+
 
 class RunnableTest(unittest.TestCase):
     def test_run_function(self):
@@ -13,6 +13,7 @@ class RunnableTest(unittest.TestCase):
         runnable = Runnable(id, target=func, args=args, kwargs=kwargs, times=3)
         runnable.run(MagicMock())
         func.assert_has_calls([call(*args, **kwargs)]*3)
+
 
 if __name__ == '__main__':
     unittest.main()
