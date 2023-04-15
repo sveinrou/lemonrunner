@@ -7,7 +7,7 @@ from inspect import isgeneratorfunction
 from time import time, sleep
 from copy import copy
 
-class DefinitelyRunnable:
+class Runnable:
     def __init__(self, id, *, target, args=tuple(), kwargs=dict(), timeout=None, times=None, interval=None):
         self.id = id
         self.target = target
@@ -48,7 +48,7 @@ class DefinitelyRunnable:
 
         self.report(output_queue, 'exited', None)
 
-class Definitely:
+class Lemonrunner:
     def __init__(self):
         self.runnables = {}
         self.procs = {}
@@ -61,7 +61,7 @@ class Definitely:
         Thread(target=self._eat, daemon=True).start()
 
     def run(self, id, func, **kwargs):
-        runnable = DefinitelyRunnable(id, target=func, **kwargs)
+        runnable = Runnable(id, target=func, **kwargs)
         with self.runnables_lock:
             self.runnables[id] = runnable
         self._start(runnable.id)
