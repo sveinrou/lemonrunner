@@ -1,7 +1,5 @@
 import setuptools
 
-version = "0.2"
-
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
@@ -10,7 +8,8 @@ requirements = []
 if __name__ == '__main__':
     setuptools.setup(
         name="lemonrunner",
-        version=version,
+        use_scm_version=True,
+        setup_requires=['setuptools_scm'],
         author="sveinrou",
         author_email="sveinrou@gmail.com",
         long_description=long_description,
