@@ -2,7 +2,7 @@ import unittest
 from unittest.mock import MagicMock, call
 from multiprocessing import Queue
 
-from lemonrunner import Lemonrunner, Runnable
+from lemonrunner.lemonrunner import Lemonrunner, Runnable
 
 class RunnableTest(unittest.TestCase):
     def test_run_function(self):
