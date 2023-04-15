@@ -14,7 +14,7 @@ if __name__ == '__main__':
         author_email="sveinrou@gmail.com",
         long_description=long_description,
         long_description_content_type="text/markdown",
-        url="https://github.com/sveinrou/definitively",
+        url="https://github.com/sveinrou/lemonrunner",
         packages=setuptools.find_packages(),
         install_requires=requirements,
         classifiers=[
