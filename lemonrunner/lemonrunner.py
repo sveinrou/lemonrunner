@@ -59,11 +59,11 @@ class Runnable:
 
 
 class Lemonrunner:
-    def __init__(self):
+    def __init__(self, queue_maxsize=1024):
         self.runnables = {}
         self.procs = {}
         self.runnables_lock = Lock()
-        self.input_queue = Queue()
+        self.input_queue = Queue(queue_maxsize)
         self.output_queue = Queue()
         self.last_seens = defaultdict(time)
 
@@ -85,6 +85,7 @@ class Lemonrunner:
     def _eat(self):
         while True:
             packet = self.input_queue.get()
+            print(self.input_queue.qsize())
             id, topic, timestamp, result = packet
             self.output_queue.put(packet)
 
