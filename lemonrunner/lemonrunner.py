@@ -66,7 +66,7 @@ class Lemonrunner:
             self.runnables[id] = runnable
         self._start(runnable.id)
 
-    def monitor(self, topics=('return', 'yield')):
+    def monitor(self, topics=('return', 'yield', 'exception')):
         while True:
             id, topic, timestamp, result = self.output_queue.get()
             if topic in topics:
@@ -105,6 +105,7 @@ class Lemonrunner:
     def _stop(self, id):
         proc = self.procs[id]
         proc.terminate()
+        proc.close()
 
 if __name__=='__main__':
     pass
