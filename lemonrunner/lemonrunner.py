@@ -59,7 +59,6 @@ class Runnable:
 
 
 class Lemonrunner:
-    '''Entry point for
     def __init__(self, queue_maxsize=1024):
         self.runnables = {}
         self.procs = {}
