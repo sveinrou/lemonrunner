@@ -59,6 +59,7 @@ class Runnable:
 
 
 class Lemonrunner:
+    '''Entry point for
     def __init__(self, queue_maxsize=1024):
         self.runnables = {}
         self.procs = {}
@@ -85,7 +86,6 @@ class Lemonrunner:
     def _eat(self):
         while True:
             packet = self.input_queue.get()
-            print(self.input_queue.qsize())
             id, topic, timestamp, result = packet
             self.output_queue.put(packet)
 
